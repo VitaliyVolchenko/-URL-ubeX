@@ -14,3 +14,6 @@
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::get('/parser', 'ParserController@index')->name('parser');
+Route::post('/parser', 'ParserController@store')->name('store');
