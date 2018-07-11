@@ -87,7 +87,7 @@
                 {{ csrf_field() }}
                 <div class="row">
                     <div class="col-lg-4 field">
-                        <input type="text" style="width:500px;height:30px;font-size: 20px;" name="theme" placeholder="* Введите URL видеосервиса" required />
+                        <input type="text" style="width:500px;height:30px;font-size: 20px;" name="url" placeholder="* Введите URL видеосервиса" required />
                         <p>
                             <button style="width:100x;height:50px" class="btn btn-theme margintop10 pull-left" type="submit">Парсить</button>
                             <span class="pull-right margintop20">* Заполните, пожалуйста, полe!</span>

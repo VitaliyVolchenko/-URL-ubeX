@@ -15,5 +15,8 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/parser', 'ParserController@index')->name('parser');
+Route::get('/parser', 'ParserController@index')->name('index');
 Route::post('/parser', 'ParserController@store')->name('store');
+Route::get('/parser/video', 'ParserController@show')->name('show');
+Route::get('/parser/video/{id}', 'ParserController@getVideo')->name('video')->where('id', '[0-9]+');
+Route::post('/parser/video', 'ParserController@delete')->name('delete');
