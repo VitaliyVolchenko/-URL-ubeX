@@ -14,9 +14,22 @@
 Route::get('/', function () {
     return view('welcome');
 });
+Auth::routes();
 
-Route::get('/parser', 'ParserController@index')->name('index');
-Route::post('/parser', 'ParserController@store')->name('store');
-Route::get('/parser/video', 'ParserController@show')->name('show');
-Route::get('/parser/video/{id}', 'ParserController@getVideo')->name('video')->where('id', '[0-9]+');
-Route::post('/parser/video', 'ParserController@delete')->name('delete');
+Route::group(['middleware' => ['auth']], function() {
+
+    Route::get('/parser', 'HomeController@index')->name('home');
+
+    Route::get('/parser', 'ParserController@index')->name('index');
+    Route::post('/parser', 'ParserController@store')->name('store');
+
+    Route::get('/parser/video', 'ParserController@show')->name('show');
+    Route::post('/parser/video', 'ParserController@delete')->name('delete');
+
+    Route::get('/parser/video/{id}', 'ParserController@getVideo')->name('video')->where('id', '[0-9]+');
+
+    Route::post('/parser/video/edit', 'ParserController@edit')->name('edit');
+
+});
+
+

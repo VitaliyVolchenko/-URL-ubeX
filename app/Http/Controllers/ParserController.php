@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use phpQuery;
 use App\Parser;
 use App\User;
+use Validator;
 
 class ParserController extends Controller
 {
@@ -16,11 +17,21 @@ class ParserController extends Controller
 
     public function index()
     {
-        return view('parser');
+        return view('home');
     }
 
     public function store(Request $request)
     {
+        $validator = Validator::make($request->all(), [
+            'url' => 'required|url',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect('parser')
+                ->withErrors($validator)
+                ->withInput();
+        }
+
         $url = $request->url;
         $host = parse_url($url, PHP_URL_HOST);
         $client = new \GuzzleHttp\Client();
@@ -57,7 +68,8 @@ class ParserController extends Controller
             $videoUrl = "https://player.vimeo.com/video/$lastElem";
             $imgUrl = $pq->find('meta[property="og:image"]')->attr('content');
         } else {
-            echo "Error HOST";
+            $e = 'Error URL , please insert only url youtube, rutube, vimeo !!';
+            return redirect()->back()->with('status', $e);
         }
         //save data in db
         $parser = new Parser;
@@ -72,7 +84,7 @@ class ParserController extends Controller
 
     public function show()
     {
-        $parsers = Parser::with('user')->orderBy('created_at')->get();
+        $parsers = Parser::with('user')->orderBy('created_at', 'desc')->get();
 
         return view('content',
             [
@@ -87,13 +99,24 @@ class ParserController extends Controller
         return view('video', compact('parser'));
     }
 
+   public function edit(Request $request)
+    {
+        $id = $request->id;
+        $parser = Parser::find($id);
+        $title = $request->title;
+        $parser->title = $title;
+        $parser->save();
+
+        return redirect()->route('show');
+    }
+
     public function delete(Request $request)
     {
         $id = $request->id;
         $parser = Parser::find($id);
         $parser->delete();
 
-        return redirect()->route('view');
+        return redirect()->route('show');
     }
 
 }
